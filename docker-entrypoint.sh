@@ -30,27 +30,6 @@ set -e
 : ${MASTER_USER:="admin"}
 : ${MASTER_PASSWD:="password"}
 
-_gen_keystore() {
-	echo "Generating keystore..."
-	# delete existing keystore if it exists
-	rm -f pwd/pdi.ks
-
-	# generate keystore as required
-	_KS_PWD="$(dd if=/dev/urandom bs=255 count=1 | tr -dc 'a-zA-Z0-9' | fold -w $((96 + RANDOM % 32)) | head -n 1)"
-	_KEY_PWD="$(dd if=/dev/urandom bs=255 count=1 | tr -dc 'a-zA-Z0-9' | fold -w $((96 + RANDOM % 32)) | head -n 1)"
-
-	$JAVA_HOME/bin/keytool -keystore pwd/pdi.ks -alias pdi -noprompt \
-		-genkey -keyalg RSA -validity 36500 \
-		-dname "CN=$CERT_NAME, OU=$CERT_ORG_UNIT, O=$CERT_ORGANIZATION, L=$CERT_LOCATION, ST=$CERT_STATE, C=$CERT_COUNTRY" \
-		-storepass $_KS_PWD -keypass $_KEY_PWD
-
-	[[ "$DEBUG" ]] && echo "=> Store [$_KS_PWD]"
-	[[ "$DEBUG" ]] && echo "=>   Key [$_KEY_PWD]"
-
-	_KS_PWD=$(./encr.sh -carte $_KS_PWD | tail -1)
-	_KEY_PWD=$(./encr.sh -carte $_KEY_PWD | tail -1)
-}
-
 _gen_password() {
 	echo "Generating encrypted password..."
 	if [[ "$SERVER_PASSWD" == "" ]]; then
@@ -96,7 +75,7 @@ gen_rest_conf() {
 KETTLE_EMPTY_STRING_DIFFERS_FROM_NULL=Y
 KETTLE_DISABLE_CONSOLE_LOGGING=Y
 
-KETTLE_FORCED_SSL=Y
+KETTLE_FORCED_SSL=N
 
 # Master Detector ( start in 1 second, and repeat detection every 10 seconds)
 #KETTLE_MASTER_DETECTOR_INITIAL_DELAY=1000
@@ -168,7 +147,6 @@ gen_slave_config() {
 	# check if configuration file exists
 	if [ ! -f pwd/slave.xml ]; then
 		echo "Generating slave server configuration..."
-		_gen_keystore
 		_gen_password
 
 		if [[ ! $MASTER_PASSWD == Encrypted* ]]; then
@@ -199,14 +177,9 @@ gen_slave_config() {
         <username>${SERVER_USER}</username>
         <password>${SERVER_PASSWD}</password>
         <master>N</master>
-        <sslMode>Y</sslMode>
+        <sslMode>N</sslMode>
         <get_properties_from_master>Master</get_properties_from_master>
         <override_existing_properties>Y</override_existing_properties>
-        <sslConfig>
-            <keyStore>pwd/pdi.ks</keyStore>
-            <keyStorePassword>${_KS_PWD}</keyStorePassword>
-            <keyPassword>${_KEY_PWD}</keyPassword>
-        </sslConfig>
     </slaveserver>
 
     <max_log_lines>${PDI_MAX_LOG_LINES}</max_log_lines>
@@ -220,7 +193,6 @@ gen_master_config() {
 	# check if configuration file exists
 	if [ ! -f pwd/master.xml ]; then
 		echo "Generating master server configuration..."
-		_gen_keystore
 		_gen_password
 
 		rm -f .kettle/kettle.properties
@@ -233,12 +205,7 @@ gen_master_config() {
             <username>${SERVER_USER}</username>
             <password>${SERVER_PASSWD}</password>
             <master>Y</master>
-            <sslMode>Y</sslMode>
-            <sslConfig>
-                <keyStore>pwd/pdi.ks</keyStore>
-                <keyStorePassword>${_KS_PWD}</keyStorePassword>
-                <keyPassword>${_KEY_PWD}</keyPassword>
-            </sslConfig>
+            <sslMode>N</sslMode>
         </slaveserver>
 
         <max_log_lines>${PDI_MAX_LOG_LINES}</max_log_lines>
