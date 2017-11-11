@@ -3,7 +3,7 @@ FROM alpine:3.6
 MAINTAINER Gustavo Oliveira <cetres@gmail.com>
 
 RUN apk update && \
-    apk add openjdk8-jre ca-certificates openssl bash && \
+    apk add openjdk8-jre ca-certificates openssl bash webkitgtk && \
     update-ca-certificates
 
 ENV JAVA_HOME=/usr/lib/jvm/default-jvm/jre
