@@ -10,7 +10,7 @@ install:
   - docker run -d -p 127.0.0.1:8080:8080 --name pdi cetres/openshift-pentaho
 
 before_script:
-	- pip install -r tests/requirements.txt
+  - pip install -r tests/requirements.txt
 
 script:
   - docker ps | grep -q pdi
