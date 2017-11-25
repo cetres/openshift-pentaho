@@ -1,0 +1,14 @@
+sudo: required
+
+language: python
+
+services:
+  - docker
+
+install:
+  - pip install -r tests/requirements.txt
+
+script:
+  - docker build -t cetres/openshift-pentaho .
+  - docker run -d -p 127.0.0.1:8080:8080 cetres/openshift-pentaho
+  - python tests/run_tests.py
