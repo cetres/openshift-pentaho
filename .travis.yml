@@ -2,6 +2,10 @@ sudo: required
 
 language: python
 
+env:
+  - SERVER_USER=admin
+  - SERVER_PASSWD=admin
+
 services:
   - docker
 
