@@ -6,9 +6,12 @@ services:
   - docker
 
 install:
-  - pip install -r tests/requirements.txt
+  - docker build -t cetres/openshift-pentaho .
+  - docker run -d -p 127.0.0.1:8080:8080 --name pdi cetres/openshift-pentaho
+
+before_script:
+	- pip install -r tests/requirements.txt
 
 script:
-  - docker build -t cetres/openshift-pentaho .
-  - docker run -d -p 127.0.0.1:8080:8080 cetres/openshift-pentaho
+  - docker ps | grep -q pdi
   - python tests/run_tests.py
