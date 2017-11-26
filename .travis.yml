@@ -10,13 +10,13 @@ services:
 
 install:
   - docker build -t cetres/openshift-pentaho .
-  - docker run -d -p 127.0.0.1:8080:8080 -e SERVER_USER=${SERVER_USER} -e SERVER_PASSWD=${SERVER_PASSWD} --name pdi cetres/openshift-pentaho
+  - docker run -d -p 127.0.0.1:8080:8080 -v ./tests:/opt/pentaho/repository -e SERVER_USER=${SERVER_USER} -e SERVER_PASSWD=${SERVER_PASSWD} --name pdi cetres/openshift-pentaho
   - sleep 60
   - docker logs pdi
 
 before_script:
-  - pip install -r tests/requirements.txt
+  - pip install -r requirements.txt
 
 script:
   - docker ps | grep -q pdi
-  - python tests/run_tests.py
+  - python run_tests.py
