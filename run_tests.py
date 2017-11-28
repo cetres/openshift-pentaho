@@ -2,11 +2,7 @@ import sys
 import os
 import logging
 from xml.etree import ElementTree
-
-try:
-    from urllib.parse import urljoin
-except ImportError:
-    from urlparse import urljoin
+from six.moves.urllib.parse import urljoin
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -25,6 +21,9 @@ if not isinstance(numeric_level, int):
 logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=numeric_level)
 
 logging.debug("HTTPBasicAuth User: %s Password: %s" % (SERVER_USER, SERVER_PASSWD))
+
+class TestError(Exception):
+    pass
 
 
 class Carte(object):
@@ -139,7 +138,7 @@ class Job(object):
         tree = ElementTree.fromstring(xml_content)
         if tree.tag != "job_configuration":
             logging.error("Job XML root tag is not job_configuration")
-            raise 
+            raise TestError("Job XML root tag is not job_configuration")
         name = None
         for c in tree:
             for c2 in c:
@@ -161,7 +160,7 @@ try:
     logging.info("Test #1: Server status")
     logging.info("Status: %s" % carte.status)
 
-    logging.info("Test #2: Add a new Job")
+    logging.info("Test #2: Add a new Job: %s" % TEST_FILE)
     job = Job(carte, TEST_FILE)
     if job.deployed:
         logging.info("Job %s succesfully submitted" % job.name)
@@ -179,3 +178,6 @@ try:
 except requests.RequestException as e:
     logging.error(str(e))
     sys.exit(1)
+except TestError as e:
+    logging.error(str(e))
+    sys.exit(2)
