@@ -1,5 +1,5 @@
 # openshift-pentaho
-[![Build Status](https://travis-ci.org/cetres/openshift-pentaho?branch=master)](https://travis-ci.org/cetres/openshift-pentaho)
+[![Build Status](https://travis-ci.org/cetres/openshift-pentaho.svg?branch=master)](https://travis-ci.org/cetres/openshift-pentaho)
 
 ```shell with right oc permissions
 $ oc new-app -f https://raw.githubusercontent.com/cetres/openshift-pentaho/master/template.yaml \
