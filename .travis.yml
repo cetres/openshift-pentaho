@@ -1,0 +1,22 @@
+sudo: required
+
+language: python
+
+env:
+  - SERVER_USER=admin SERVER_PASSWD=admin
+
+services:
+  - docker
+
+install:
+  - docker build -t cetres/openshift-pentaho .
+  - docker run -d -p 127.0.0.1:8080:8080 -v $(pwd)/tests:/opt/pentaho/repository -e SERVER_USER=${SERVER_USER} -e SERVER_PASSWD=${SERVER_PASSWD} --name pdi cetres/openshift-pentaho
+  - sleep 60
+  - docker logs pdi
+
+before_script:
+  - pip install -r requirements.txt
+
+script:
+  - docker ps | grep -q pdi
+  - python run_tests.py
