@@ -7,5 +7,5 @@ $ oc new-app -f https://raw.githubusercontent.com/cetres/openshift-pentaho/maste
              -p SERVER_USER=<server_user> \
              -p SERVER_PASSWD=<server_password> \
              -p SERVER_NAME=<application_url>
-$ oc start-build <application_name>
+$ oc deploy <application_name>
 ```
