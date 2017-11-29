@@ -19,7 +19,8 @@ RUN apk update && \
     wget -qO /tmp/pdi-ce.zip https://downloads.sourceforge.net/project/pentaho/Data%20Integration/${PDI_VERSION}/pdi-ce-${PDI_BUILD}.zip && \
     unzip -q /tmp/pdi-ce.zip -d ${PENTAHO_HOME} && \
     rm -f /tmp/pdi-ce.zip && \
-    apk del build-dependencies
+    apk del build-dependencies && \
+    chmod -R g+w ${PENTAHO_HOME}
 
 ADD docker-entrypoint.sh $KETTLE_HOME/docker-entrypoint.sh
 ADD tests $KETTLE_HOME/

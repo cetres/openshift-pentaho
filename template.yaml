@@ -10,6 +10,8 @@ metadata:
     template.openshift.io/provider-display-name: "Apartamento 101"
     template.openshift.io/documentation-url: "https://github.com/cetres/openshift-pentaho"
     tags: "pentaho,pdi,kettle,bi,carte,data,etl"
+    openshift.io/support-url: "https://github.com/cetres/openshift-pentaho"
+message: "Your admin credentials are ${SERVER_USER}:${SERVER_PASSWD} at ${SERVER_NAME}" 
 labels:
   app: pentaho-carte
 parameters:
@@ -28,7 +30,7 @@ parameters:
   name: SERVER_PASSWD
   required: true
   value: admin
-- description: Carte server URL for router (example: pentaho.openshift.intranet)
+- description: Carte server URL for router (example pentaho.openshift.intranet)
   displayName: Server URL
   name: SERVER_NAME
   required: true
@@ -41,12 +43,10 @@ objects:
     name: ${APPLICATION_NAME}
   spec:
     tags:
-      from:
+    - from:
         kind: DockerImage
         name: cetres/openshift-pentaho
       name: latest
-      referencePolicy:
-        type: Source
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:

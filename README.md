@@ -3,7 +3,7 @@
 
 ```shell with right oc permissions
 $ oc new-app -f https://raw.githubusercontent.com/cetres/openshift-pentaho/master/template.yaml \
-             -p APPLICATION_NAME=<application_name> 
+             -p APPLICATION_NAME=<application_name> \
              -p SERVER_USER=<server_user> \
              -p SERVER_PASSWD=<server_password> \
              -p SERVER_NAME=<application_url>
