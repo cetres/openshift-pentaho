@@ -9,3 +9,6 @@ $ oc new-app -f https://raw.githubusercontent.com/cetres/openshift-pentaho/maste
              -p SERVER_NAME=<application_url>
 $ oc deploy <application_name>
 ```
+
+## API
+Documentation: https://help.pentaho.com/Documentation/7.1/0R0/070/020/020/030
