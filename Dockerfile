@@ -1,6 +1,6 @@
-FROM alpine:3.6
+FROM alpine:3.12
 
-MAINTAINER Gustavo Oliveira <cetres@gmail.com>
+LABEL maintainer="Gustavo Oliveira <cetres@gmail.com>"
 
 ENV JAVA_HOME=/usr/lib/jvm/default-jvm/jre
 ENV PDI_VERSION=7.1 \
@@ -12,7 +12,7 @@ ENV PDI_VERSION=7.1 \
     PATH=${PATH}:${JAVA_HOME}/bin
 
 RUN apk update && \
-    apk add openjdk8-jre bash webkitgtk && \
+    apk add openjdk8-jre bash webkit2gtk && \
     apk add --virtual build-dependencies ca-certificates openssl && \
     update-ca-certificates && \
     mkdir -p ${PENTAHO_HOME} && \
