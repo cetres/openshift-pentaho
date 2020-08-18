@@ -40,7 +40,7 @@ objects:
   metadata:
     labels:
       app: pentaho
-    name: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}-app
   spec:
     tags:
     - from:
@@ -111,7 +111,7 @@ objects:
         - pentaho
         from:
           kind: ImageStreamTag
-          name: pentaho-app:latest
+          name: ${APPLICATION_NAME}-app:latest
       type: ImageChange
 - apiVersion: v1
   kind: Route
